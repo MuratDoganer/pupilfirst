@@ -58,7 +58,17 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource_or_scope)
-    stored_location_for(resource_or_scope) || dashboard_path
+    # Get the stored location
+    stored_location = stored_location_for(resource_or_scope)
+
+    # Check if stored location is trying to redirect to service worker
+    if stored_location&.include?("service-worker.js")
+      # If so, ignore it and redirect to the dashboard instead
+      dashboard_path
+    else
+      # Otherwise, redirect to the stored location or the dashboard
+      stored_location || dashboard_path
+    end
   end
 
   def current_host
