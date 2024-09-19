@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
   before_action :store_user_location, if: :storable_location?
   before_action :redirect_to_primary_domain, if: :domain_redirection_required?
 
+  # Turn on private mode
+  before_action :authenticate_user!
+
   around_action :set_time_zone, if: :current_user
   around_action :switch_locale, if: :current_user
 
